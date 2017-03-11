@@ -70,11 +70,12 @@ public class FXMLDocumentController implements Initializable {
      * this method will draw chess board with given queens configuration
      *
      * @param screenSize size of area for drawing chess board
-     * @param n
+     * @param n board size
+     * @param state board state
      * @return group which holds the chess elements
      */
     public static Group constructBoard(int screenSize, int n, ArrayState state) {
-        List<FadeTransition> list = new ArrayList<>();
+        FadeTransition[] list = new FadeTransition[state.getBoardSize()*state.getBoardSize()];
         Group root = new Group();
         boolean color = false;
         double size = (double) (screenSize / n);
@@ -96,7 +97,7 @@ public class FXMLDocumentController implements Initializable {
                 fadeTransition.setFromValue(0.2);
                 fadeTransition.setByValue(0.1);
                 fadeTransition.setToValue(1.0);
-                list.add(state.getPosition(i, j) - 1, fadeTransition);
+                list[state.getPosition(i, j) - 1]= fadeTransition;
             }
             if (n % 2 == 0) {
                 color = !color;
@@ -117,7 +118,7 @@ public class FXMLDocumentController implements Initializable {
         ArrayState initState = new ArrayState(size, i, j);
         Group constructBoard = constructBoard(
                 (int) Math.min(boardHolder.getHeight(), boardHolder.getWidth()),
-                8, agent.performSearch(initState, SearchStrategy.GREEDY, null));
+                size, agent.performSearch(initState, algorithmBox.getSelectionModel().getSelectedItem(), null));
         boardHolder.getChildren().add(constructBoard);
     }
 
