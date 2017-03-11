@@ -39,7 +39,6 @@ public class Status {
     private String status;
     private long takenTime;
     private int visitedNode;
-    private int currentMoveDepth;
     private int expandedNode;
 
     public String getStatus() {
@@ -66,15 +65,6 @@ public class Status {
 
     public void setVisitedNode(int value) {
         visitedNode = value;
-    }
-
-
-    public int getCurrentMoveDepth() {
-        return currentMoveDepth;
-    }
-
-    public void setCurrentMoveDepth(int value) {
-        currentMoveDepth = value;
     }
 
 
