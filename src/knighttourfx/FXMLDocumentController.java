@@ -159,7 +159,7 @@ public class FXMLDocumentController implements Initializable {
         expandedLabel.setText(String.valueOf(searchStatus.getExpandedNode()));
         visitedLabel.setText(String.valueOf(searchStatus.getVisitedNode()));
         depthLabel.setText(String.valueOf(searchStatus.getExpandedNode()));
-        timeLabel.setText(String.valueOf(searchStatus.getTakenTime()));
+        timeLabel.setText(searchStatus.getTakenTime()+" ms");
         statusLabel.setText(searchStatus.getStatus());
         searchStatus = new Status();
     }
