@@ -25,15 +25,8 @@ package knighttourfx;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.ResourceBundle;
-import java.util.Stack;
-import java.util.function.Function;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.event.ActionEvent;
@@ -41,9 +34,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -57,11 +51,20 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private StackPane boardHolder;
-    
+
     SearchAgent agent;
 
     @FXML
-    private Button button;
+    private TextField sizeField;
+
+    @FXML
+    private TextField startXField;
+
+    @FXML
+    private TextField startYField;
+
+    @FXML
+    private ComboBox<SearchStrategy> algorithmBox;
 
     /**
      * this method will draw chess board with given queens configuration
@@ -108,26 +111,22 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         boardHolder.getChildren().clear();
+        int size = Integer.parseInt(sizeField.getText());
+        int i = Integer.parseInt(startXField.getText());
+        int j = Integer.parseInt(startYField.getText());
+        ArrayState initState = new ArrayState(size, i, j);
         Group constructBoard = constructBoard(
                 (int) Math.min(boardHolder.getHeight(), boardHolder.getWidth()),
                 8, agent.performSearch(initState, SearchStrategy.GREEDY, null));
         boardHolder.getChildren().add(constructBoard);
     }
 
-    int[][] performSearch() {
-        return new int[][]{{0, 59, 38, 33, 30, 17, 8, 63},
-        {37, 34, 31, 60, 9, 62, 29, 16},
-        {58, 1, 36, 39, 32, 27, 18, 7},
-        {35, 48, 41, 26, 61, 10, 15, 28},
-        {42, 57, 2, 49, 40, 23, 6, 19},
-        {47, 50, 45, 54, 25, 20, 11, 14},
-        {56, 43, 52, 3, 22, 13, 24, 5},
-        {51, 46, 55, 44, 53, 4, 21, 12}};
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         agent = new SearchAgent();
+        algorithmBox.getItems().addAll(SearchStrategy.BFS, SearchStrategy.A_STAR,
+                SearchStrategy.DFS, SearchStrategy.GREEDY,
+                SearchStrategy.UCS, SearchStrategy.RBFS);
     }
 
 }
