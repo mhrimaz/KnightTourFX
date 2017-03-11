@@ -35,7 +35,6 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="Size:" />
@@ -52,10 +51,8 @@
                         <Label fx:id="statusLabel" prefHeight="17.0" prefWidth="114.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label fx:id="visitedLabel" prefHeight="17.0" prefWidth="181.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                         <Label fx:id="expandedLabel" prefHeight="17.0" prefWidth="154.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                        <Label text="Depth:" GridPane.rowIndex="9" />
-                        <Label fx:id="depthLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                        <Label text="Time:" GridPane.rowIndex="10" />
-                        <Label fx:id="timeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                        <Label text="Time:" GridPane.rowIndex="9" />
+                        <Label fx:id="timeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                      </children>
                   </GridPane>
                </children>

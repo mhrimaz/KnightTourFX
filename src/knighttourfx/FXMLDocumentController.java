@@ -24,18 +24,14 @@
 package knighttourfx;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
-import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -50,37 +46,34 @@ import javafx.util.Duration;
  * @author mhrimaz
  */
 public class FXMLDocumentController implements Initializable {
-    
+
     @FXML
     private StackPane boardHolder;
-    
+
     private SearchAgent agent;
     private Status searchStatus;
-    
+
     @FXML
     private TextField sizeField;
-    
+
     @FXML
     private TextField startXField;
-    
+
     @FXML
     private TextField startYField;
-    
+
     @FXML
     private Label statusLabel;
-    
+
     @FXML
     private Label visitedLabel;
-    
+
     @FXML
     private Label expandedLabel;
-    
-    @FXML
-    private Label depthLabel;
-    
+
     @FXML
     private Label timeLabel;
-    
+
     @FXML
     private ComboBox<SearchStrategy> algorithmBox;
 
@@ -126,7 +119,7 @@ public class FXMLDocumentController implements Initializable {
         transitions.play();
         return root;
     }
-    
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
         boardHolder.getChildren().clear();
@@ -140,7 +133,7 @@ public class FXMLDocumentController implements Initializable {
                 return agent.performSearch(initState,
                         algorithmBox.getSelectionModel().getSelectedItem(), searchStatus);
             }
-            
+
             @Override
             protected void succeeded() {
                 Group constructBoard = constructBoard(
@@ -149,7 +142,7 @@ public class FXMLDocumentController implements Initializable {
                 boardHolder.getChildren().add(constructBoard);
                 setResult();
             }
-            
+
         };
         new Thread(task).start();
     }
@@ -158,11 +151,11 @@ public class FXMLDocumentController implements Initializable {
         timeLabel.setText(String.valueOf(searchStatus.getTakenTime()));
         expandedLabel.setText(String.valueOf(searchStatus.getExpandedNode()));
         visitedLabel.setText(String.valueOf(searchStatus.getVisitedNode()));
-        timeLabel.setText(searchStatus.getTakenTime()+" ms");
+        timeLabel.setText(searchStatus.getTakenTime() + " ms");
         statusLabel.setText(searchStatus.getStatus());
         searchStatus = new Status();
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         agent = new SearchAgent();
@@ -171,5 +164,5 @@ public class FXMLDocumentController implements Initializable {
                 SearchStrategy.A_STAR, SearchStrategy.GREEDY,
                 SearchStrategy.UCS, SearchStrategy.RBFS);
     }
-    
+
 }
