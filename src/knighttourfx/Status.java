@@ -36,74 +36,54 @@ import javafx.beans.property.StringProperty;
  */
 public class Status {
 
-    private final StringProperty status = new SimpleStringProperty();
+    private String status;
+    private long takenTime;
+    private int visitedNode;
+    private int currentMoveDepth;
+    private int expandedNode;
 
     public String getStatus() {
-        return status.get();
-    }
-
-    public void setStatus(String value) {
-        status.set(value);
-    }
-
-    public StringProperty statusProperty() {
         return status;
     }
 
-    private final LongProperty takenTime = new SimpleLongProperty();
+    public void setStatus(String value) {
+        status = value;
+    }
+
 
     public long getTakenTime() {
-        return takenTime.get();
-    }
-
-    public void setTakenTime(long value) {
-        takenTime.set(value);
-    }
-
-    public LongProperty takenTimeProperty() {
         return takenTime;
     }
 
-    private final IntegerProperty visitedNode = new SimpleIntegerProperty();
+    public void setTakenTime(long value) {
+        takenTime = value;
+    }
+
 
     public int getVisitedNode() {
-        return visitedNode.get();
-    }
-
-    public void setVisitedNode(int value) {
-        visitedNode.set(value);
-    }
-
-    public IntegerProperty visitedNodeProperty() {
         return visitedNode;
     }
 
-    private final IntegerProperty currentMoveDepth = new SimpleIntegerProperty();
+    public void setVisitedNode(int value) {
+        visitedNode = value;
+    }
+
 
     public int getCurrentMoveDepth() {
-        return currentMoveDepth.get();
-    }
-
-    public void setCurrentMoveDepth(int value) {
-        currentMoveDepth.set(value);
-    }
-
-    public IntegerProperty currentMoveDepthProperty() {
         return currentMoveDepth;
     }
 
-    private final IntegerProperty expandedNode = new SimpleIntegerProperty();
+    public void setCurrentMoveDepth(int value) {
+        currentMoveDepth = value;
+    }
+
 
     public int getExpandedNode() {
-        return expandedNode.get();
+        return expandedNode;
     }
 
     public void setExpandedNode(int value) {
-        expandedNode.set(value);
-    }
-
-    public IntegerProperty expandedNodeProperty() {
-        return expandedNode;
+        expandedNode = value;
     }
 
 }

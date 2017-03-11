@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
+import javafx.beans.binding.Bindings;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -48,21 +50,37 @@ import javafx.util.Duration;
  * @author mhrimaz
  */
 public class FXMLDocumentController implements Initializable {
-
+    
     @FXML
     private StackPane boardHolder;
-
-    SearchAgent agent;
-
+    
+    private SearchAgent agent;
+    private Status searchStatus;
+    
     @FXML
     private TextField sizeField;
-
+    
     @FXML
     private TextField startXField;
-
+    
     @FXML
     private TextField startYField;
-
+    
+    @FXML
+    private Label statusLabel;
+    
+    @FXML
+    private Label visitedLabel;
+    
+    @FXML
+    private Label expandedLabel;
+    
+    @FXML
+    private Label depthLabel;
+    
+    @FXML
+    private Label timeLabel;
+    
     @FXML
     private ComboBox<SearchStrategy> algorithmBox;
 
@@ -75,7 +93,7 @@ public class FXMLDocumentController implements Initializable {
      * @return group which holds the chess elements
      */
     public static Group constructBoard(int screenSize, int n, ArrayState state) {
-        FadeTransition[] list = new FadeTransition[state.getBoardSize()*state.getBoardSize()];
+        FadeTransition[] list = new FadeTransition[state.getBoardSize() * state.getBoardSize()];
         Group root = new Group();
         boolean color = false;
         double size = (double) (screenSize / n);
@@ -97,7 +115,7 @@ public class FXMLDocumentController implements Initializable {
                 fadeTransition.setFromValue(0.2);
                 fadeTransition.setByValue(0.1);
                 fadeTransition.setToValue(1.0);
-                list[state.getPosition(i, j) - 1]= fadeTransition;
+                list[state.getPosition(i, j) - 1] = fadeTransition;
             }
             if (n % 2 == 0) {
                 color = !color;
@@ -108,7 +126,7 @@ public class FXMLDocumentController implements Initializable {
         transitions.play();
         return root;
     }
-
+    
     @FXML
     private void handleButtonAction(ActionEvent event) {
         boardHolder.getChildren().clear();
@@ -116,18 +134,43 @@ public class FXMLDocumentController implements Initializable {
         int i = Integer.parseInt(startXField.getText());
         int j = Integer.parseInt(startYField.getText());
         ArrayState initState = new ArrayState(size, i, j);
-        Group constructBoard = constructBoard(
-                (int) Math.min(boardHolder.getHeight(), boardHolder.getWidth()),
-                size, agent.performSearch(initState, algorithmBox.getSelectionModel().getSelectedItem(), null));
-        boardHolder.getChildren().add(constructBoard);
+        Task<ArrayState> task = new Task<ArrayState>() {
+            @Override
+            protected ArrayState call() throws Exception {
+                return agent.performSearch(initState,
+                        algorithmBox.getSelectionModel().getSelectedItem(), searchStatus);
+            }
+            
+            @Override
+            protected void succeeded() {
+                Group constructBoard = constructBoard(
+                        (int) Math.min(boardHolder.getHeight(), boardHolder.getWidth()),
+                        size, getValue());
+                boardHolder.getChildren().add(constructBoard);
+                setResult();
+            }
+            
+        };
+        new Thread(task).start();
     }
 
+    private void setResult() {
+        timeLabel.setText(String.valueOf(searchStatus.getTakenTime()));
+        expandedLabel.setText(String.valueOf(searchStatus.getExpandedNode()));
+        visitedLabel.setText(String.valueOf(searchStatus.getVisitedNode()));
+        depthLabel.setText(String.valueOf(searchStatus.getExpandedNode()));
+        timeLabel.setText(String.valueOf(searchStatus.getTakenTime()));
+        statusLabel.setText(searchStatus.getStatus());
+        searchStatus = new Status();
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         agent = new SearchAgent();
-        algorithmBox.getItems().addAll(SearchStrategy.BFS, SearchStrategy.A_STAR,
-                SearchStrategy.DFS, SearchStrategy.GREEDY,
+        searchStatus = new Status();
+        algorithmBox.getItems().addAll(SearchStrategy.BFS, SearchStrategy.DFS,
+                SearchStrategy.A_STAR, SearchStrategy.GREEDY,
                 SearchStrategy.UCS, SearchStrategy.RBFS);
     }
-
+    
 }
