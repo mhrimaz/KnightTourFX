@@ -32,6 +32,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -73,6 +74,10 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private Label timeLabel;
+    
+    
+    @FXML
+    private Button button;
 
     @FXML
     private ComboBox<SearchStrategy> algorithmBox;
@@ -129,7 +134,18 @@ public class FXMLDocumentController implements Initializable {
         ArrayState initState = new ArrayState(size, i, j);
         Task<ArrayState> task = new Task<ArrayState>() {
             @Override
+            protected void running() {
+                button.setDisable(true);
+            }
+
+            @Override
+            protected void done() {
+                button.setDisable(false);
+            }
+            
+            @Override
             protected ArrayState call() throws Exception {
+                
                 return agent.performSearch(initState,
                         algorithmBox.getSelectionModel().getSelectedItem(), searchStatus);
             }
@@ -162,7 +178,8 @@ public class FXMLDocumentController implements Initializable {
         searchStatus = new Status();
         algorithmBox.getItems().addAll(SearchStrategy.BFS, SearchStrategy.DFS,
                 SearchStrategy.A_STAR, SearchStrategy.GREEDY,
-                SearchStrategy.UCS, SearchStrategy.RBFS);
+                SearchStrategy.UCS);
+        algorithmBox.getSelectionModel().select(4);
     }
 
 }
