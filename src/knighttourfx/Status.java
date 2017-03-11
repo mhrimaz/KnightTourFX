@@ -27,12 +27,28 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
  * @author mhrimaz
  */
 public class Status {
+
+    private final StringProperty status = new SimpleStringProperty();
+
+    public String getStatus() {
+        return status.get();
+    }
+
+    public void setStatus(String value) {
+        status.set(value);
+    }
+
+    public StringProperty statusProperty() {
+        return status;
+    }
 
     private final LongProperty takenTime = new SimpleLongProperty();
 
