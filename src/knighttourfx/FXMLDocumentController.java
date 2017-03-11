@@ -1,0 +1,133 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2017 mhrimaz.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package knighttourfx;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.ResourceBundle;
+import java.util.Stack;
+import java.util.function.Function;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Group;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
+/**
+ *
+ * @author mhrimaz
+ */
+public class FXMLDocumentController implements Initializable {
+
+    @FXML
+    private StackPane boardHolder;
+    
+    SearchAgent agent;
+
+    @FXML
+    private Button button;
+
+    /**
+     * this method will draw chess board with given queens configuration
+     *
+     * @param screenSize size of area for drawing chess board
+     * @param n
+     * @return group which holds the chess elements
+     */
+    public static Group constructBoard(int screenSize, int n, ArrayState state) {
+        List<FadeTransition> list = new ArrayList<>();
+        Group root = new Group();
+        boolean color = false;
+        double size = (double) (screenSize / n);
+        for (int j = 0, xPos = 0, yPos = 0; j < n; j++, xPos += size, yPos = 0) {
+            for (int i = 0; i < n; i++, yPos += size, color = !color) {
+                Rectangle piece = new Rectangle(size, size);
+                Label label = new Label(String.valueOf(state.getPosition(i, j)), piece);
+                label.setLayoutX(xPos);
+                label.setLayoutY(yPos);
+                label.setContentDisplay(ContentDisplay.CENTER);
+                label.setOpacity(0.2);
+                if (color == false) {
+                    piece.setFill(Color.GOLD);
+                } else {
+                    piece.setFill(Color.MEDIUMSEAGREEN);
+                }
+                root.getChildren().add(label);
+                FadeTransition fadeTransition = new FadeTransition(Duration.millis(900), label);
+                fadeTransition.setFromValue(0.2);
+                fadeTransition.setByValue(0.1);
+                fadeTransition.setToValue(1.0);
+                list.add(state.getPosition(i, j) - 1, fadeTransition);
+            }
+            if (n % 2 == 0) {
+                color = !color;
+            }
+        }
+        SequentialTransition transitions = new SequentialTransition();
+        transitions.getChildren().addAll(list);
+        transitions.play();
+        return root;
+    }
+
+    @FXML
+    private void handleButtonAction(ActionEvent event) {
+        boardHolder.getChildren().clear();
+        Group constructBoard = constructBoard(
+                (int) Math.min(boardHolder.getHeight(), boardHolder.getWidth()),
+                8, agent.performSearch(initState, SearchStrategy.GREEDY, null));
+        boardHolder.getChildren().add(constructBoard);
+    }
+
+    int[][] performSearch() {
+        return new int[][]{{0, 59, 38, 33, 30, 17, 8, 63},
+        {37, 34, 31, 60, 9, 62, 29, 16},
+        {58, 1, 36, 39, 32, 27, 18, 7},
+        {35, 48, 41, 26, 61, 10, 15, 28},
+        {42, 57, 2, 49, 40, 23, 6, 19},
+        {47, 50, 45, 54, 25, 20, 11, 14},
+        {56, 43, 52, 3, 22, 13, 24, 5},
+        {51, 46, 55, 44, 53, 4, 21, 12}};
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        agent = new SearchAgent();
+    }
+
+}
